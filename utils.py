@@ -8,12 +8,14 @@ import re
 import datetime
 
 import numpy
+import pandas as pd
+from PIL import Image
 
 import torch
 from torch.optim.lr_scheduler import _LRScheduler
 import torchvision
 import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, TensorDataset
 
 
 def get_network(args):
@@ -113,6 +115,9 @@ def get_network(args):
     elif args.net == 'mobilenetv2':
         from models.mobilenetv2 import mobilenetv2
         net = mobilenetv2()
+    elif args.net == 'mobilenetv21':
+        from models.mobilenetv21 import mobilenetv21
+        net = mobilenetv21()
     elif args.net == 'nasnet':
         from models.nasnet import nasnet
         net = nasnet()
@@ -162,74 +167,83 @@ def get_network(args):
 
     return net
 
+df_train = pd.read_csv('./data/train.csv')
+df_test = pd.read_csv('./data/test.csv')
+df_val = pd.read_csv('./data/val.csv')
 
-def get_training_dataloader(mean, std, batch_size=16, num_workers=2, shuffle=True):
+class CustomDataset():
+    def __init__(self, df, transform=None):
+        self.df = df
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.df)
+
+    def __getitem__(self, idx):
+        img_path = self.df.iloc[idx]['image_link']
+        image = Image.open(img_path).convert('L')  # Open image and convert to grayscale
+        label = self.df.iloc[idx]['label']
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image, label
+
+def get_training_dataloader(batch_size=16, shuffle=True, num_workers=2):
     """ return training dataloader
     Args:
-        mean: mean of cifar100 training dataset
-        std: std of cifar100 training dataset
-        path: path to cifar100 training python dataset
+        path: path to 952cangjie training dataset
         batch_size: dataloader batchsize
-        num_workers: dataloader num_works
         shuffle: whether to shuffle
     Returns: train_data_loader:torch dataloader object
     """
-
     transform_train = transforms.Compose([
-        #transforms.ToPILImage(),
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(15),
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std)
+        transforms.Grayscale(num_output_channels=1),  # Ensure the image is in grayscale
+        transforms.ToTensor()
     ])
-    #cifar100_training = CIFAR100Train(path, transform=transform_train)
-    cifar100_training = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform_train)
-    cifar100_training_loader = DataLoader(
-        cifar100_training, shuffle=shuffle, num_workers=num_workers, batch_size=batch_size)
 
-    return cifar100_training_loader
+    train_dataset = CustomDataset(df_train, transform=transform_train)
+    train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
-def get_test_dataloader(mean, std, batch_size=16, num_workers=2, shuffle=True):
+    return train_data_loader
+
+
+def get_test_dataloader(batch_size=16, shuffle=True, num_workers=2):
     """ return training dataloader
     Args:
-        mean: mean of cifar100 test dataset
-        std: std of cifar100 test dataset
-        path: path to cifar100 test python dataset
+        path: path to 952cangjie testing dataset
         batch_size: dataloader batchsize
-        num_workers: dataloader num_works
         shuffle: whether to shuffle
-    Returns: cifar100_test_loader:torch dataloader object
+    Returns: test_data_loader:torch dataloader object
     """
-
     transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std)
+        transforms.Grayscale(num_output_channels=1),  # Ensure the image is in grayscale
+        transforms.ToTensor()
     ])
-    #cifar100_test = CIFAR100Test(path, transform=transform_test)
-    cifar100_test = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform_test)
-    cifar100_test_loader = DataLoader(
-        cifar100_test, shuffle=shuffle, num_workers=num_workers, batch_size=batch_size)
 
-    return cifar100_test_loader
+    test_dataset = CustomDataset(df_test, transform=transform_test)
+    test_data_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
-def compute_mean_std(cifar100_dataset):
-    """compute the mean and std of cifar100 dataset
+    return test_data_loader
+
+def get_valid_dataloader(batch_size=16, shuffle=True, num_workers=2):
+    """ return training dataloader
     Args:
-        cifar100_training_dataset or cifar100_test_dataset
-        witch derived from class torch.utils.data
-
-    Returns:
-        a tuple contains mean, std value of entire dataset
+        path: path to 952cangjie valid dataset
+        batch_size: dataloader batchsize
+        shuffle: whether to shuffle
+    Returns: valid_data_loader:torch dataloader object
     """
+    transform_val = transforms.Compose([
+        transforms.Grayscale(num_output_channels=1),  # Ensure the image is in grayscale
+        transforms.ToTensor()
+    ])
 
-    data_r = numpy.dstack([cifar100_dataset[i][1][:, :, 0] for i in range(len(cifar100_dataset))])
-    data_g = numpy.dstack([cifar100_dataset[i][1][:, :, 1] for i in range(len(cifar100_dataset))])
-    data_b = numpy.dstack([cifar100_dataset[i][1][:, :, 2] for i in range(len(cifar100_dataset))])
-    mean = numpy.mean(data_r), numpy.mean(data_g), numpy.mean(data_b)
-    std = numpy.std(data_r), numpy.std(data_g), numpy.std(data_b)
+    val_dataset = CustomDataset(df_val, transform=transform_val)
+    val_data_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
-    return mean, std
+    return val_data_loader
+
 
 class WarmUpLR(_LRScheduler):
     """warmup_training learning rate scheduler
