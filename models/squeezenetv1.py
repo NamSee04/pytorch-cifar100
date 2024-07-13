@@ -1,13 +1,3 @@
-"""squeezenet in pytorch
-
-
-
-[1] Song Han, Jeff Pool, John Tran, William J. Dally
-
-    squeezenet: Learning both Weights and Connections for Efficient Neural Networks
-    https://arxiv.org/abs/1506.02626
-"""
-
 import torch
 import torch.nn as nn
 
@@ -34,18 +24,27 @@ class Fire(nn.Module):
             nn.BatchNorm2d(int(out_channel / 2)),
             nn.ReLU(inplace=True)
         )
+                # If in_channel is not equal to out_channel, use a 1x1 conv to match dimensions
+        if in_channel != out_channel:
+            self.residual = nn.Sequential(
+                nn.Conv2d(in_channel, out_channel, 1),
+                nn.BatchNorm2d(out_channel)
+            )
+        else:
+            self.residual = nn.Identity()
 
     def forward(self, x):
-
+        residual = self.residual(x)
         x = self.squeeze(x)
         x = torch.cat([
             self.expand_1x1(x),
             self.expand_3x3(x)
         ], 1)
 
-        return x
+        x += residual
+        return nn.ReLU(inplace=True)(x)
 
-class SqueezeNet(nn.Module):
+class SqueezeNetv1(nn.Module):
 
     """mobile net with simple bypass"""
     def __init__(self, class_num=952):
@@ -75,13 +74,13 @@ class SqueezeNet(nn.Module):
         x = self.stem(x)
 
         f2 = self.fire2(x)
-        f3 = self.fire3(f2) + f2
+        f3 = self.fire3(f2)
         f4 = self.fire4(f3)
         f4 = self.maxpool(f4)
-
-        f5 = self.fire5(f4) + f4
+        
+        f5 = self.fire5(f4)
         f6 = self.fire6(f5)
-        f7 = self.fire7(f6) + f6
+        f7 = self.fire7(f6)
         f8 = self.fire8(f7)
         f8 = self.maxpool(f8)
 
@@ -93,8 +92,8 @@ class SqueezeNet(nn.Module):
 
         return x
 
-def squeezenet(class_num=952):
-    return SqueezeNet(class_num=class_num)
+def squeezenetv1(class_num=952):
+    return SqueezeNetv1(class_num=class_num)
 
-model = squeezenet()
+model = squeezenetv1()
 print(sum(p.numel() for p in model.parameters()))

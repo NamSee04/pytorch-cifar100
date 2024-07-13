@@ -15,7 +15,7 @@ import torch.nn.functional as F
 
 class LinearBottleNeck(nn.Module):
 
-    def __init__(self, in_channels, out_channels, stride, t=6, class_num=100):
+    def __init__(self, in_channels, out_channels, stride, t=6, class_num=952):
         super().__init__()
 
         self.residual = nn.Sequential(
@@ -46,11 +46,11 @@ class LinearBottleNeck(nn.Module):
 
 class MobileNetV2(nn.Module):
 
-    def __init__(self, class_num=100):
+    def __init__(self, class_num=952):
         super().__init__()
 
         self.pre = nn.Sequential(
-            nn.Conv2d(3, 32, 1, padding=1),
+            nn.Conv2d(1, 32, 1, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU6(inplace=True)
         )

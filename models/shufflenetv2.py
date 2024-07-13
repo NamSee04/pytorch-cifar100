@@ -99,7 +99,7 @@ class ShuffleUnit(nn.Module):
 
 class ShuffleNetV2(nn.Module):
 
-    def __init__(self, ratio=1, class_num=100):
+    def __init__(self, ratio=1, class_num=952):
         super().__init__()
         if ratio == 0.5:
             out_channels = [48, 96, 192, 1024]
@@ -113,7 +113,7 @@ class ShuffleNetV2(nn.Module):
             ValueError('unsupported ratio number')
 
         self.pre = nn.Sequential(
-            nn.Conv2d(3, 24, 3, padding=1),
+            nn.Conv2d(1, 24, 3, padding=1),
             nn.BatchNorm2d(24)
         )
 
