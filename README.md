@@ -135,7 +135,7 @@ The result I can get from a certain model, since I use the same hyperparameters 
 better result.
 
 |dataset|network|params|top1 err|epoch(lr = 0.1)|epoch(lr = 0.02)|epoch(lr = 0.004)|epoch(lr = 0.0008)|epoch(lr = 0.00016)|total epoch|
-|:-----:|:-----:|:----:|:------:|:-------------:|:--------------:|:---------------:|:----------------:|:----------------:|:---------:|
+|:-----:|:-----:|:----:|:------:|:-------------:|:--------------:|:---------------:|:----------------:|:----------------:|:---------:|:---------:|
 |952-Cangjie|mobilenetv2|3.46M|99.68|3|3|3|3|3|15|
 |952-Cangjie|squeezenet|1.22M|99.74|3|3|3|3|3|15|
 |952-Cangjie|shufflenet|2.23M|99.75|3|3|3|3|3|15|
