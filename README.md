@@ -134,8 +134,8 @@ You can choose whether to use TensorBoard to visualize your training procedure
 The result I can get from a certain model, since I use the same hyperparameters to train all the networks, some networks might not get the best result from these hyperparameters, you could try yourself by finetuning the hyperparameters to get
 better result.
 
-|dataset|network|params|top1 err|epoch(lr = 0.1)|epoch(lr = 0.02)|epoch(lr = 0.004)|epoch(lr = 0.0008)|epoch(lr = 0.00016)|total epoch|
-|:-----:|:-----:|:----:|:------:|:-------------:|:--------------:|:---------------:|:----------------:|:----------------:|:---------:|
-|952-Cangjie|mobilenetv2|3.46M|99.68|3|3|3|3|3|15|
-|952-Cangjie|squeezenet|1.22M|99.74|3|3|3|3|3|15|
-|952-Cangjie|shufflenet|2.23M|99.75|3|3|3|3|3|15|
+|network|params|top1 err|epoch(lr = 0.1)|epoch(lr = 0.02)|epoch(lr = 0.004)|epoch(lr = 0.0008)|epoch(lr = 0.00016)|total epoch|
+|:-----:|:----:|:------:|:-------------:|:--------------:|:---------------:|:----------------:|:----------------:|:---------:|
+|mobilenetv2|3.46M|99.68|3|3|3|3|3|15|
+|squeezenet|1.22M|99.74|3|3|3|3|3|15|
+|shufflenet|2.23M|99.75|3|3|3|3|3|15|
