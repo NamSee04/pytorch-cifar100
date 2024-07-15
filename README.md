@@ -60,3 +60,10 @@ Task3:
 ```bash
 $ python c3_test.py -weights path_to_weights_file
 ```
+
+## Results
+Task1 (99.76%) with squeezenetlight
+Task2 (99.80%) with squeezenet
+Task3 (98.69%) with squeezenetlight + LSTM
+
+## Sorry for the bad implementation in Task 3 :((((
