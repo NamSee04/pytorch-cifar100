@@ -91,9 +91,3 @@ class SqueezeNetv1(nn.Module):
         x = x.view(x.size(0), -1)
 
         return x
-
-def squeezenetv1(class_num=952):
-    return SqueezeNetv1(class_num=class_num)
-
-model = squeezenetv1()
-print(sum(p.numel() for p in model.parameters()))

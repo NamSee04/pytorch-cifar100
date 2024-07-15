@@ -152,8 +152,3 @@ class ShuffleNetV2(nn.Module):
 
 def shufflenetv2():
     return ShuffleNetV2()
-
-
-
-
-

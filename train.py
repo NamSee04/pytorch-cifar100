@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-
-""" Train network using PyTorch
-
-author: baiyu
-"""
-
 import os
 import time
 import argparse

@@ -1,11 +1,11 @@
-# Pytorch-cifar100
+# CNN for Chineses characters classification
 
-practice on cifar100 using pytorch
+practice on CNN using pytorch
 
 ## Requirements
 
 This is my experiment eviroument
-- python3.6
+- python3.11
 - pytorch1.6.0+cu101
 - tensorboard 2.2.2(optional)
 
@@ -45,48 +45,8 @@ diverge during early training phase.
 The supported net args are:
 ```
 squeezenet
-mobilenet
 mobilenetv2
-shufflenet
 shufflenetv2
-vgg11
-vgg13
-vgg16
-vgg19
-densenet121
-densenet161
-densenet201
-googlenet
-inceptionv3
-inceptionv4
-inceptionresnetv2
-xception
-resnet18
-resnet34
-resnet50
-resnet101
-resnet152
-preactresnet18
-preactresnet34
-preactresnet50
-preactresnet101
-preactresnet152
-resnext50
-resnext101
-resnext152
-attention56
-attention92
-seresnet18
-seresnet34
-seresnet50
-seresnet101
-seresnet152
-nasnet
-wideresnet
-stochasticdepth18
-stochasticdepth34
-stochasticdepth50
-stochasticdepth101
 ```
 Normally, the weights file with the best accuracy would be written to the disk with name suffix 'best'(default in checkpoint folder).
 

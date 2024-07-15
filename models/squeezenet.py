@@ -95,6 +95,3 @@ class SqueezeNet(nn.Module):
 
 def squeezenet(class_num=952):
     return SqueezeNet(class_num=class_num)
-
-model = squeezenet()
-print(sum(p.numel() for p in model.parameters()))

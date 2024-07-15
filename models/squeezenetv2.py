@@ -90,6 +90,4 @@ class SqueezeNetv2(nn.Module):
 
 def squeezenetv2(class_num=952):
     return SqueezeNetv2(class_num=class_num)
-
-model = squeezenetv2()
-print(sum(p.numel() for p in model.parameters()))
+    
