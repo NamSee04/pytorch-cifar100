@@ -20,6 +20,7 @@ $ cd pytorch-cifar100
 
 ### 2. dataset
 Dowload dataset from: https://drive.google.com/file/d/1AIi8286VY4QGJ8i2SY1sIQc7OeUdJqwX/view
+
 Extract and makesure that 952_test, 952_train, 952_val are in data folder
 
 ### 3. train the model
@@ -49,6 +50,7 @@ shufflenetv2
 
 ### 4. test the model
 Test the model using test.py
+
 Checkpoint are in checkpoint folder
 
 Task1 and Task2:
